@@ -1,8 +1,16 @@
+//👉 Orquestador
+
 // src/server.js
 import app from './app.js';
+import config from './config/index.js';
+import { connectDB } from './config/db.js';
 
-const PORT = process.env.PORT || 8080;
+async function start() {
+  await connectDB();
 
-app.listen(PORT, () => {
-  console.log(`🚀 Backend escuchando en http://localhost:${PORT}`);
-});
+  app.listen(config.PORT, () => {
+    console.log(`🚀 Backend en http://localhost:${config.PORT}`);
+  });
+}
+
+start();

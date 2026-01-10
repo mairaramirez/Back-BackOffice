@@ -4,6 +4,9 @@
 
 import { Router } from 'express';
 import * as usersController from './users.controller.js';
+import { validateBody } from '../middleware/validate.js';
+import { createUserSchema } from './users.schema.js';
+import { updateUserSchema } from './users.schema.js';
 
 const router = Router();
 
@@ -14,10 +17,11 @@ router.get('/', usersController.getAll);
 router.get('/:id', usersController.getById);
 
 // POST /users
-router.post('/', usersController.create);
+router.post('/', validateBody(createUserSchema), usersController.create);
 
 // PUT /users/:id
-router.put('/:id', usersController.update);
+router.put('/:id', validateBody(updateUserSchema),
+  usersController.update);
 
 // DELETE /users/:id
 router.delete('/:id', usersController.remove);

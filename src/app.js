@@ -1,6 +1,9 @@
-// src/app.js La definición de la aplicación HTTP 
+//👉 Definición de la API
+
+// src/app.js
 import express from 'express';
 import usersRoutes from './modules/users/users.routes.js';
+import turnosRoutes from './modules/turnos/turnos.routes.js';
 
 
 const app = express();
@@ -11,7 +14,8 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// users API
 app.use('/users', usersRoutes);
+app.use('/turnos', turnosRoutes);
+
 
 export default app;

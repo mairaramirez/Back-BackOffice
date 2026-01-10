@@ -1,78 +1,49 @@
 // Manejan la persistencia
-
-// src/modules/users/users.repository.js
 import fs from 'fs/promises';
 import path from 'path';
+import { UserModel } from './users.model.js';
 
 const USERS_FILE = path.resolve('src/storage/users.json');
 
-/**
- * Lee el archivo users.json y devuelve un array
- */
 async function readFile() {
-  const data = await fs.readFile(USERS_FILE, 'utf-8');
-  return JSON.parse(data);
+  try {
+    const data = await fs.readFile(USERS_FILE, 'utf-8');
+    if (!data.trim()) return [];
+    return JSON.parse(data);
+  } catch (err) {
+    return [];
+  }
 }
 
-/**
- * Escribe el array completo en users.json
- */
-async function writeFile(users) {
-  await fs.writeFile(
-    USERS_FILE,
-    JSON.stringify(users, null, 2),
-    'utf-8'
-  );
-}
+export const findAll = async () => {
+  return await UserModel.find().lean();
+};
 
-/**
- * Devuelve todos los usuarios
- */
-export async function findAll() {
-  return await readFile();
-}
+export const findById = async (id) => {
+  return await UserModel.findById(id).lean();
+};
 
-/**
- * Busca usuario por ID
- */
-export async function findById(id) {
-  const users = await readFile();
-  return users.find(u => u.id === id);
-}
 
-/**
- * Busca usuario por documento (DNI / CI / LC)
- */
 export async function findByDocumento(documento) {
   const users = await readFile();
   return users.find(u => u.documento === documento);
 }
 
-/**
- * Crea un nuevo usuario
- */
-export async function create(user) {
-  const users = await readFile();
-  users.push(user);
-  await writeFile(users);
+
+export const create = async (data) => {
+  const user = await UserModel.create(data);
   return user;
-}
+};
 
-/**
- * Actualiza parcialmente un usuario
- */
-export async function update(id, partial) {
-  const users = await readFile();
-  const index = users.findIndex(u => u.id === id);
 
-  if (index === -1) return null;
+export const update = async (id, payload) => {
+  return await UserModel.findByIdAndUpdate(
+    id,
+    payload,
+    { new: true }
+  );
+};
 
-  users[index] = {
-    ...users[index],
-    ...partial,
-    updatedAt: new Date().toISOString()
-  };
-
-  await writeFile(users);
-  return users[index];
-}
+export const remove = async (id) => {
+  return await UserModel.findByIdAndDelete(id);
+};
