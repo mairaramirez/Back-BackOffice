@@ -2,11 +2,17 @@
 
 // src/app.js
 import express from 'express';
+import cors from 'cors'
 import usersRoutes from './modules/users/users.routes.js';
 import turnosRoutes from './modules/turnos/turnos.routes.js';
 
 
 const app = express();
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}))
 
 app.use(express.json());
 
