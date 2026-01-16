@@ -35,3 +35,10 @@ export const updateUser = async (id, payload) => {
 export const deleteUser = async (id) => {
   return await UserModel.findOneAndDelete(id);
 };
+
+import * as repo from './users.repository.js';
+
+export const searchClients = async (query) => {
+  if (!query) return [];
+  return repo.searchByClientNumber(query);
+};

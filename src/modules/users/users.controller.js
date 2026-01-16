@@ -51,3 +51,13 @@ export const remove = async (req, res) => {
   }
   res.status(204).send();
 };
+
+export const search = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const users = await usersService.searchClients(q);
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

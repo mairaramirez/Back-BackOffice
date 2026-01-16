@@ -13,9 +13,6 @@ const router = Router();
 // GET /users
 router.get('/', usersController.getAll);
 
-// GET /users/:id
-router.get('/:id', usersController.getById);
-
 // POST /users
 router.post('/', validateBody(createUserSchema), usersController.create);
 
@@ -25,5 +22,11 @@ router.put('/:id', validateBody(updateUserSchema),
 
 // DELETE /users/:id
 router.delete('/:id', usersController.remove);
+
+router.get('/search', usersController.search);
+
+// GET /users/:id
+router.get('/:id', usersController.getById);
+
 
 export default router;

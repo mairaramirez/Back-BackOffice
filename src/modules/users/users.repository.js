@@ -47,3 +47,16 @@ export const update = async (id, payload) => {
 export const remove = async (id) => {
   return await UserModel.findByIdAndDelete(id);
 };
+
+export const searchByClientNumber = async (query) => {
+  return UserModel.find({
+    $expr: {
+      $regexMatch: {
+        input: { $toString: "$clientNumber" },
+        regex: query
+      }
+    }
+  })
+  .select('clientNumber nombre')
+  .limit(10);
+};
