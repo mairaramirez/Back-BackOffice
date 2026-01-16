@@ -18,6 +18,7 @@ export const createUser = async (data) => {
   const user = await UserModel.create({
     clientNumber,
     ...data
+    
   });
 
   return user;

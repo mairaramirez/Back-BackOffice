@@ -2,39 +2,49 @@
 import * as repo from './turnos.repository.js';
 import { getNextSequence } from '../counters/counters.repository.js';
 import { UserModel } from '../users/users.model.js';
+import { TurnoModel } from './turnos.model.js';
 
 export const getAllTurnos = async () => {
   return await repo.findAll();
 };
 
 export const createTurno = async (data) => {
-  // 1. Validar que el cliente exista
-  const user = await UserModel.findOne({ clientNumber: Number(data.clientNumber) });
+  if (!data.clientNumber || !data.oficio || !data.fecha || !data.hora) {
+    throw new Error('Datos incompletos para crear turno');
+  }
+
+  const user = await UserModel.findOne({ clientNumber: data.clientNumber });
   if (!user) {
     throw new Error('Cliente no existe');
   }
 
-  // 2. Generar número de turno
+  const fecha = new Date(data.fecha);
+  fecha.setUTCHours(0, 0, 0, 0);
+
+  const existe = await repo.findConfirmadoBySlot(fecha, data.hora);
+  if (existe) {
+    throw new Error('Ya existe un turno para esa fecha y hora');
+  }
+
   const turnoNumber = await getNextSequence('turnos');
 
-  return await repo.create( {
+  return repo.create({
     turnoNumber,
-    ...data
+    clientNumber: data.clientNumber,
+    oficio: data.oficio,
+    fecha,
+    hora: data.hora,
+    notas: data.notas,
   });
 };
 
 
 export const getTurnosByClient = async (clientNumber) => {
-  // 1️⃣ Validar que el cliente exista
   const user = await UserModel.findOne({ clientNumber });
-
   if (!user) {
     throw new Error('Cliente no existe');
   }
-
-  // 2️⃣ Buscar turnos del cliente
   const turnos = await repo.findByClientNumber(clientNumber);
-
   return turnos;
 };
 

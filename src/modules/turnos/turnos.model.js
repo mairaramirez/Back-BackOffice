@@ -2,23 +2,24 @@ import mongoose from 'mongoose';
 
 const turnoSchema = new mongoose.Schema(
   {
+    clientNumber: {
+      type: Number,
+      required: true,
+      index: true,
+    },
     turnoNumber: {
       type: Number,
       required: true,
       unique: true
-    },
-    clientNumber: {
-      type: Number,
-      required: true,
-      index: true
     },
     oficio: {
       type: String,
       required: true
     },
     fecha: {
-      type: String,
-      required: true
+      type: Date,
+      required: true,
+      index: true,
     },
     hora: {
       type: String,
@@ -31,7 +32,6 @@ const turnoSchema = new mongoose.Schema(
     },
     notas: String
   },
-  { timestamps: true }
 );
 
 export const TurnoModel = mongoose.model('Turno', turnoSchema);

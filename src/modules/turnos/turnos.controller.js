@@ -20,8 +20,8 @@ export const create = async (req, res) => {
   try {
     const turno = await turnosService.createTurno(req.body);
     res.status(201).json(turno);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
 
