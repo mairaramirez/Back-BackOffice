@@ -5,8 +5,25 @@ import { UserModel } from '../users/users.model.js';
 import { TurnoModel } from './turnos.model.js';
 
 export const getAllTurnos = async () => {
-  return await repo.findAll();
+  const turnos = await repo.findAll();
+
+  const clientNumbers = turnos.map(t => t.clientNumber);
+
+  const users = await UserModel.find({
+    clientNumber: { $in: clientNumbers }
+  }).lean();
+
+  const usersMap = {};
+  users.forEach(u => {
+    usersMap[u.clientNumber] = u;
+  });
+
+  return turnos.map(t => ({
+    ...t.toObject(),
+    cliente: usersMap[t.clientNumber] || null
+  }));
 };
+
 
 export const createTurno = async (data) => {
   if (!data.clientNumber || !data.oficio || !data.fecha || !data.hora) {
@@ -36,16 +53,6 @@ export const createTurno = async (data) => {
     hora: data.hora,
     notas: data.notas,
   });
-};
-
-
-export const getTurnosByClient = async (clientNumber) => {
-  const user = await UserModel.findOne({ clientNumber });
-  if (!user) {
-    throw new Error('Cliente no existe');
-  }
-  const turnos = await repo.findByClientNumber(clientNumber);
-  return turnos;
 };
 
 export const confirmarTurno = async (turnoNumber) => {
@@ -92,5 +99,20 @@ export const cancelarTurno = async (turnoNumber) => {
 
   return turno;
 };
+
+
+export const getTurnosByClient = async (clientNumber) => {
+  const user = await UserModel.findOne({ clientNumber });
+  if (!user) {
+    throw new Error('Cliente no existe');
+  }
+  const turnos = await repo.findByClientNumber(clientNumber);
+  return turnos;
+};
+
+export const actualizarFechaHora = async (turnoNumber, fecha, hora) => {
+  return repo.updateByTurnoNumber(turnoNumber, { fecha, hora });
+};
+
 
 

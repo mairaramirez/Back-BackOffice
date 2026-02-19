@@ -1,5 +1,3 @@
-// API pública 
-
 // src/modules/users/users.routes.js
 
 import { Router } from 'express';
@@ -13,17 +11,16 @@ const router = Router();
 // GET /users
 router.get('/', usersController.getAll);
 
+router.get('/search', usersController.search);
+
 // POST /users
 router.post('/', validateBody(createUserSchema), usersController.create);
 
 // PUT /users/:id
-router.put('/:id', validateBody(updateUserSchema),
-  usersController.update);
+router.put('/:id', validateBody(updateUserSchema),  usersController.update);
 
 // DELETE /users/:id
 router.delete('/:id', usersController.remove);
-
-router.get('/search', usersController.search);
 
 // GET /users/:id
 router.get('/:id', usersController.getById);

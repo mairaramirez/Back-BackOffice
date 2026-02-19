@@ -25,18 +25,6 @@ export const create = async (req, res) => {
   }
 };
 
-export const getByClient = async (req, res) => {
-  try {
-    const { clientNumber } = req.params;
-
-    const turnos = await turnosService.getTurnosByClient(clientNumber);
-
-    res.json(turnos);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
 export const confirmar = async (req, res) => {
   try {
     const { numero } = req.params; // ✅ CLAVE
@@ -63,3 +51,39 @@ export const cancelar = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+
+export const getByClient = async (req, res) => {
+  try {
+    const { clientNumber } = req.params;
+
+    const turnos = await turnosService.getTurnosByClient(clientNumber);
+
+    res.json(turnos);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const actualizarFechaHora = async (req, res) => {
+  try {
+    const { turnoNumber } = req.params;
+    const { fecha, hora } = req.body;
+
+    const turno = await turnosService.actualizarFechaHora(
+      turnoNumber,
+      fecha,
+      hora
+    );
+
+    if (!turno) {
+      return res.status(404).json({ message: "Turno no encontrado" });
+    }
+
+    res.json(turno);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error actualizando turno" });
+  }
+};
+

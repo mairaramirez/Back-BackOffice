@@ -35,3 +35,10 @@ export const findConfirmadoBySlot = async (fecha, hora) => {
     status: 'confirmado'
   });
 };
+export const updateByTurnoNumber = async (turnoNumber, payload) => {
+  return await TurnoModel.findOneAndUpdate(
+    { turnoNumber },
+    payload,
+    { new: true }
+  );
+};

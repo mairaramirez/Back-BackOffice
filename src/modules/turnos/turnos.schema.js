@@ -7,4 +7,9 @@ export const createTurnoSchema = Joi.object({
   hora: Joi.string().required(),  // "09:30"
   notas: Joi.string().optional(),
 });
+export const updateTurnoSchema = Joi.object({
+  fecha: Joi.string().required(),
+  hora: Joi.string().required()
+});
+
 

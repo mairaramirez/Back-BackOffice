@@ -11,6 +11,7 @@ router.get('/cliente/:clientNumber', turnosController.getByClient);
 router.post('/', validateBody(createTurnoSchema), turnosController.create);
 router.patch('/numero/:numero/confirmar', turnosController.confirmar)
 router.patch('/numero/:numero/cancelar', turnosController.cancelar);
+router.patch('/numero/:turnoNumber', turnosController.actualizarFechaHora);
 
 
 

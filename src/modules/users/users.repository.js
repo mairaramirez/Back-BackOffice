@@ -53,10 +53,12 @@ export const searchByClientNumber = async (query) => {
     $expr: {
       $regexMatch: {
         input: { $toString: "$clientNumber" },
-        regex: query
+        regex: `^${query}`
       }
     }
   })
   .select('clientNumber nombre')
-  .limit(10);
+  .limit(10)
+  .lean();
 };
+
